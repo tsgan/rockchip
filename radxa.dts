@@ -1,0 +1,96 @@
+/*-
+ * Copyright (c) 2013 Ganbold Tsagaankhuu <ganbold@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * $FreeBSD$
+ */
+
+/dts-v1/;
+
+/ {
+	model = "Radxa RadxaRock";
+	compatible = "rockchip,rk3188";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+	interrupt-parent = <&GIC>;
+
+        memory {
+                device_type = "memory";
+                reg = < 0x60000000 0x20000000 >;        /* 512MB RAM */
+        };
+
+        aliases {
+                soc = &SOC;
+                UART0 = &UART0;
+        };
+  
+        SOC: rk3188 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		ranges;
+                bus-frequency = <0>;
+
+                GIC: interrupt-controller@1013d000 {
+                        compatible = "arm,gic";
+                        reg =   <0x1013d000 0x1000>,    /* Distributor Registers */
+                                <0x1013c100 0x0100>;    /* CPU Interface Registers */
+                        interrupt-controller;
+                        #interrupt-cells = <1>;
+                };
+
+                // ARM Cortex A9 TWD Timer
+                timer@1013c600 {
+                        compatible = "arm,mpcore-timers";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        reg = <0x1013c200 0x100>, // Global Timer Regs
+                              <0x1013c600 0x20>;  // Private Timer Regs
+                        interrupts = < 27 29 >;
+                        interrupt-parent = <&GIC>;
+                };
+
+                UART0: serial@20064000 {
+                        status = "okay";
+                        compatible = "ns16550";
+                        reg = <0x20064000 0x400>;
+                        reg-shift = <2>;
+                        interrupts = <36>;
+                        interrupt-parent = <&GIC>;
+                        current-speed = <115200>;
+                        clock-frequency = < 24000000 >;
+                        busy-detect = <1>;
+                        broken-txfifo = <1>;
+                };
+
+	};
+                
+        chosen {
+                bootargs = "-v";
+                stdin = "UART0";
+                stdout = "UART0";
+        };
+};
+
