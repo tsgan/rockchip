@@ -50,7 +50,7 @@ __FBSDID("$FreeBSD$");
 #include <dev/fdt/fdt_common.h>
 
 /* Start of address space used for bootstrap map */
-#define DEVMAP_BOOTSTRAP_MAP_START      0xE0000000
+#define DEVMAP_BOOTSTRAP_MAP_START      0xF0000000
 
 
 vm_offset_t
@@ -83,9 +83,9 @@ platform_devmap_init(void)
 {
 	int i = 0;
 
-	fdt_devmap[i].pd_va =   0xE0080000;
-	fdt_devmap[i].pd_pa =   0x10080000;
-	fdt_devmap[i].pd_size = 0x00400000;	/* 4 MB */
+	fdt_devmap[i].pd_va = 0xF0080000;
+	fdt_devmap[i].pd_pa = 0x10080000;
+	fdt_devmap[i].pd_size = 0x100000;
 	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
 	fdt_devmap[i].pd_cache = PTE_DEVICE;
 
