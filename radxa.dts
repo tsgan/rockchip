@@ -73,6 +73,13 @@
                         interrupt-parent = <&GIC>;
                 };
 
+                usb1: usb@101c0000 {
+                        compatible = "rockchip,usb-ehci", "usb-ehci";
+                        reg = <0x0x101c0000 0x40000>;
+                        interrupts = < 49 >;
+                        interrupt-parent = <&GIC>;
+                };
+
                 UART2: serial@20064000 {
                         status = "okay";
                         compatible = "ns16550";
