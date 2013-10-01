@@ -66,6 +66,7 @@
                         compatible = "arm,mpcore-timers";
                         #address-cells = <1>;
                         #size-cells = <0>;
+                        clock-frequency = < 24000000 >;
                         reg = <0x1013c200 0x100>, // Global Timer Regs
                               <0x1013c600 0x20>;  // Private Timer Regs
                         interrupts = < 27 29 >;
@@ -77,7 +78,8 @@
                         compatible = "ns16550";
                         reg = <0x20064000 0x400>;
                         reg-shift = <2>;
-                        interrupts = <36>;
+			reg-io-width = <1>;
+                        interrupts = <68>;
                         interrupt-parent = <&GIC>;
                         current-speed = <115200>;
                         clock-frequency = < 24000000 >;
