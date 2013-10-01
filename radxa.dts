@@ -43,7 +43,7 @@
 
         aliases {
                 soc = &SOC;
-                UART0 = &UART0;
+                UART2 = &UART2;
         };
   
         SOC: rk3188 {
@@ -73,7 +73,7 @@
                         interrupt-parent = <&GIC>;
                 };
 
-                UART0: serial@20064000 {
+                UART2: serial@20064000 {
                         status = "okay";
                         compatible = "ns16550";
                         reg = <0x20064000 0x400>;
@@ -91,8 +91,8 @@
                 
         chosen {
                 bootargs = "-v";
-                stdin = "UART0";
-                stdout = "UART0";
+                stdin = "UART2";
+                stdout = "UART2";
         };
 };
 
