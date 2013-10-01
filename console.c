@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD$");
 #include <sys/kernel.h>
 
 #ifndef	RK30XX_UART_BASE
-#define	RK30XX_UART_BASE	0xe0064000 	/* UART0 */
+#define	RK30XX_UART_BASE	0xf0064000 	/* UART2 */
 #endif
 
 #define	REG_SHIFT	2
@@ -53,6 +53,20 @@ __FBSDID("$FreeBSD$");
 #define	UART_MSR	6	/* In:  Modem Status Register */
 #define	UART_SCR	7	/* I/O: Scratch Register */
 
+/*
+ * The base address of the uart registers.
+ *
+ * This is global so that it can be changed on the fly from the outside.  For
+ * example, set rk30xx_uart_base=physaddr and then call cninit() as the first two
+ * lines of initarm() and enjoy printf() availability through the tricky bits of
+ * startup.  After initarm() switches from physical to virtual addressing, just
+ * set rk30xx_uart_base=virtaddr and printf keeps working.
+ */
+uint32_t rk30xx_uart_base = RK30XX_UART_BASE;
+
+/*
+ * uart related funcs
+ */
 static uint32_t
 uart_getreg(uint32_t *bas)
 {
@@ -68,11 +82,11 @@ uart_setreg(uint32_t *bas, uint32_t val)
 static int
 ub_getc(void)
 {
-	while ((uart_getreg((uint32_t *)(RK30XX_UART_BASE + 
-	    (UART_LSR << REG_SHIFT))) & UART_LSR_DR) == 0);
+	while ((uart_getreg((uint32_t *)(rk30xx_uart_base + 
+	    (UART_LSR << REG_SHIFT))) & UART_LSR_DR) == 0)
 		__asm __volatile("nop");
 
-	return (uart_getreg((uint32_t *)RK30XX_UART_BASE) & 0xff);
+	return (uart_getreg((uint32_t *)rk30xx_uart_base) & 0xff);
 }
 
 static void
@@ -81,11 +95,11 @@ ub_putc(unsigned char c)
 	if (c == '\n')
 		ub_putc('\r');
 
-	while ((uart_getreg((uint32_t *)(RK30XX_UART_BASE + 
+	while ((uart_getreg((uint32_t *)(rk30xx_uart_base + 
 	    (UART_LSR << REG_SHIFT))) & UART_LSR_THRE) == 0)
 		__asm __volatile("nop");
 
-	uart_setreg((uint32_t *)RK30XX_UART_BASE, c);
+	uart_setreg((uint32_t *)rk30xx_uart_base, c);
 }
 
 static cn_probe_t	uart_cnprobe;
@@ -117,7 +131,7 @@ uart_cnprobe(struct consdev *cp)
 static void
 uart_cninit(struct consdev *cp)
 {
-	uart_setreg((uint32_t *)(RK30XX_UART_BASE + 
+	uart_setreg((uint32_t *)(rk30xx_uart_base + 
 	    (UART_FCR << REG_SHIFT)), 0x06);
 }
 

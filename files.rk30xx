@@ -15,3 +15,5 @@ arm/arm/mpcore_timer.c                  standard
 arm/rockchip/bus_space.c		standard
 arm/rockchip/common.c			standard
 arm/rockchip/rk30xx_machdep.c		standard
+arm/rockchip/console.c			standard
+
