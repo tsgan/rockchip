@@ -121,11 +121,11 @@ struct rk30_gpio_softc {
 static uint32_t
 rk30_gpio_get_function(struct rk30_gpio_softc *sc, uint32_t pin)
 {
-	uint32_t bank, func, bit;
+	uint32_t bank, func, offset;
 
 	bank = pin / 32;
 	pin = pin - 32 * bank;
-	bit = 1 << pin;
+	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
 	func = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
@@ -150,28 +150,7 @@ rk30_gpio_func_flag(uint32_t nfunc)
 static void
 rk30_gpio_set_function(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t f)
 {
-	uint32_t bank, data, bit;
-
-	/* Must be called with lock held. */
-	RK30_GPIO_LOCK_ASSERT(sc);
-
-	bank = pin / 32;
-	pin = pin - 32 * bank;
-	bit = 1 << pin;
-
-	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
-	if (f)
-		data |= bit;
-	else
-		data &= ~bit;
-	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DDR, data);
-}
-
-static void
-rk30_gpio_set_pud(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t state)
-{
-	uint32_t bank, offset;
-	uint32_t *base;
+	uint32_t bank, data, offset;
 
 	/* Must be called with lock held. */
 	RK30_GPIO_LOCK_ASSERT(sc);
@@ -180,16 +159,35 @@ rk30_gpio_set_pud(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t state)
 	pin = pin - 32 * bank;
 	offset = 1 << pin;
 
-	if (bank == 0 && offset < 12) {
+	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
+	if (f)
+		data |= offset;
+	else
+		data &= ~offset;
+	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DDR, data);
+}
+
+static void
+rk30_gpio_set_pud(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t state)
+{
+	uint32_t bank;
+	uint32_t *base;
+
+	bank = pin / 32;
+
+	/* Must be called with lock held. */
+	RK30_GPIO_LOCK_ASSERT(sc);
+
+	if (bank == 0 && pin < 12) {
 		base = (uint32_t *)(RK30_PMU_BASE + PMU_GPIO0A_PULL + 
-		    ((offset / 8) * 4));
-		offset = (offset % 8) * 2;
-		REG_WRITE(base, (0x3 << (16 + offset)) | (state << offset));
+		    ((pin / 8) * 4));
+		pin = (pin % 8) * 2;
+		REG_WRITE(base, (0x3 << (16 + pin)) | (state << pin));
 	} else {
 		base = (uint32_t *)(RK30_GRF_BASE + GRF_GPIO0B_PULL - 4 + bank * 16 + 
-		    ((offset / 8) * 4));
-		offset = (7 - (offset % 8)) * 2;
-		REG_WRITE(base, (0x3 << (16 + offset)) | (state << offset));
+		    ((pin / 8) * 4));
+		pin = (7 - (pin % 8)) * 2;
+		REG_WRITE(base, (0x3 << (16 + pin)) | (state << pin));
 	}
 }
 
@@ -342,7 +340,7 @@ static int
 rk30_gpio_pin_set(device_t dev, uint32_t pin, unsigned int value)
 {
 	struct rk30_gpio_softc *sc = device_get_softc(dev);
-	uint32_t bank, bit, data;
+	uint32_t bank, offset, data;
 	int i;
 
 	for (i = 0; i < sc->sc_gpio_npins; i++) {
@@ -355,18 +353,18 @@ rk30_gpio_pin_set(device_t dev, uint32_t pin, unsigned int value)
 
 	bank = pin / 32;
 	pin = pin - 32 * bank;
-	bit = 1 << pin;
+	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
 	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
-	data |= bit;
+	data |= offset;
 	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DDR, data);
 
 	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DR);
 	if (value)
-		data |= bit;
+		data |= offset;
 	else
-		data &= ~bit;
+		data &= ~offset;
 	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DR, data);
 	RK30_GPIO_UNLOCK(sc);
 
@@ -377,7 +375,7 @@ static int
 rk30_gpio_pin_get(device_t dev, uint32_t pin, unsigned int *val)
 {
 	struct rk30_gpio_softc *sc = device_get_softc(dev);
-	uint32_t bank, bit, reg_data;
+	uint32_t bank, offset, reg_data;
 	int i;
 
 	for (i = 0; i < sc->sc_gpio_npins; i++) {
@@ -390,12 +388,12 @@ rk30_gpio_pin_get(device_t dev, uint32_t pin, unsigned int *val)
 
 	bank = pin / 32;
 	pin = pin - 32 * bank;
-	bit = 1 << pin;
+	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
 	reg_data = RK30_GPIO_READ(sc, RK30_GPIO_EXT_PORT);
 	RK30_GPIO_UNLOCK(sc);
-	*val = (reg_data & bit) ? 1 : 0;
+	*val = (reg_data & offset) ? 1 : 0;
 
 	return (0);
 }
@@ -404,7 +402,7 @@ static int
 rk30_gpio_pin_toggle(device_t dev, uint32_t pin)
 {
 	struct rk30_gpio_softc *sc = device_get_softc(dev);
-	uint32_t bank, data, bit;
+	uint32_t bank, data, offset;
 	int i;
 
 	for (i = 0; i < sc->sc_gpio_npins; i++) {
@@ -417,21 +415,21 @@ rk30_gpio_pin_toggle(device_t dev, uint32_t pin)
 
 	bank = pin / 32;
 	pin = pin - 32 * bank;
-	bit = 1 << pin;
+	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
 	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
-	if (data & bit)
-		data &= ~bit;
+	if (data & offset)
+		data &= ~offset;
 	else
-		data |= bit;
+		data |= offset;
 	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DDR, data);
 
 	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DR);
-	if (data & bit)
-		data &= ~bit;
+	if (data & offset)
+		data &= ~offset;
 	else
-		data |= bit;
+		data |= offset;
 	RK30_GPIO_WRITE(sc, RK30_GPIO_SWPORT_DR, data);
 	RK30_GPIO_UNLOCK(sc);
 
@@ -441,7 +439,7 @@ rk30_gpio_pin_toggle(device_t dev, uint32_t pin)
 static int
 rk30_gpio_probe(device_t dev)
 {
-	if (!ofw_bus_is_compatible(dev, "rockchip,rk30-gpio"))
+	if (!ofw_bus_is_compatible(dev, "rockchip,rk30xx-gpio"))
 		return (ENXIO);
 
 	device_set_desc(dev, "Rockchip RK30 GPIO controller");
