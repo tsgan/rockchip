@@ -127,10 +127,7 @@ rk30_gpio_get_function(struct rk30_gpio_softc *sc, uint32_t pin)
 	pin = pin - 32 * bank;
 	offset = 1 << pin;
 
-	RK30_GPIO_LOCK(sc);
 	func = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
-	RK30_GPIO_UNLOCK(sc);
-
 	func &= offset;
 
 	return (func);
