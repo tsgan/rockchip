@@ -114,7 +114,8 @@ options 	USB_DEBUG
 #options 	USB_VERBOSE
 #device 	uhci
 #device 	ohci
-device		ehci
+#device		ehci
+device          dwcotg          #DWC OTG controller
 
 device		umass
 
