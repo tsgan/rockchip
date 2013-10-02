@@ -65,11 +65,11 @@ __FBSDID("$FreeBSD$");
 #define	RK30_GPIO_DEFAULT_CAPS	(GPIO_PIN_INPUT | GPIO_PIN_OUTPUT | \
     GPIO_PIN_PULLUP | GPIO_PIN_PULLDOWN)
 
-#define RK30_GPIO_NONE		0
+#define RK30_GPIO_NONE			0
 #define RK30_GPIO_PULLUP		1
 #define RK30_GPIO_PULLDOWN		2
 
-#define RK30_GPIO_INPUT		0
+#define RK30_GPIO_INPUT			0
 #define RK30_GPIO_OUTPUT		1
 
 struct rk30_gpio_softc {
