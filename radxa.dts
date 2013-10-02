@@ -73,41 +73,41 @@
                         interrupt-parent = <&GIC>;
                 };
 
-			gpio0: gpio@2000a000 {
-				compatible = "rockchip,rk30xx-gpio";
-				gpio-controller;
-				#gpio-cells = <2>;
-				reg = <0x2000a000 0x100>;
-				interrupts = <86>;
-	                        interrupt-parent = <&GIC>;
-			};
+		gpio0: gpio@2000a000 {
+			compatible = "rockchip,rk30xx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = <0x2000a000 0x100>;
+			interrupts = <86>;
+                        interrupt-parent = <&GIC>;
+		};
 
-			gpio1: gpio@2003c000 {
-				compatible = "rockchip,rk30xx-gpio";
-				gpio-controller;
-				#gpio-cells = <2>;
-				reg = <0x2003c000 0x100>;
-				interrupts = <87>;
-	                        interrupt-parent = <&GIC>;
-			};
+		gpio1: gpio@2003c000 {
+			compatible = "rockchip,rk30xx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = <0x2003c000 0x100>;
+			interrupts = <87>;
+                        interrupt-parent = <&GIC>;
+		};
 
-			gpio2: gpio@2003e000 {
-				compatible = "rockchip,rk30xx-gpio";
-				gpio-controller;
-				#gpio-cells = <2>;
-				reg = <0x2003e000 0x100>;
-				interrupts = <88>;
-	                        interrupt-parent = <&GIC>;
-			};
+		gpio2: gpio@2003e000 {
+			compatible = "rockchip,rk30xx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = <0x2003e000 0x100>;
+			interrupts = <88>;
+                        interrupt-parent = <&GIC>;
+		};
 
-			gpio3: gpio@20080000 {
-				compatible = "rockchip,rk30xx-gpio";
-				gpio-controller;
-				#gpio-cells = <2>;
-				reg = <0x20080000 0x100>;
-				interrupts = <89>;
-	                        interrupt-parent = <&GIC>;
-			};
+		gpio3: gpio@20080000 {
+			compatible = "rockchip,rk30xx-gpio";
+			gpio-controller;
+			#gpio-cells = <2>;
+			reg = <0x20080000 0x100>;
+			interrupts = <89>;
+                        interrupt-parent = <&GIC>;
+		};
 
                 usb1: usb@101c0000 {
                         compatible = "rockchip,usb-ehci", "usb-ehci";
