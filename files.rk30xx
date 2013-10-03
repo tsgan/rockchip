@@ -17,7 +17,6 @@ arm/rockchip/common.c			standard
 arm/rockchip/rk30xx_machdep.c		standard
 arm/rockchip/rk30xx_gpio.c		optional        gpio
 arm/broadcom/bcm2835/dwc_otg_brcm.c	optional	dwcotg
-arm/rockchip/rk30xx_ehci.c              optional        ehci
 
 # Dummy serial console
 #arm/rockchip/console.c			standard

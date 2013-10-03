@@ -121,10 +121,14 @@
                 };
 
                 usb1: usb@101c0000 {
-                        compatible = "rockchip,usb-ehci", "usb-ehci";
+                        compatible = "broadcom,bcm2835-usb",
+                                     "broadcom,bcm2708-usb",
+                                     "synopsys,designware-hs-otg2";
                         reg = <0x101c0000 0x40000>;
                         interrupts = < 49 >;
                         interrupt-parent = <&GIC>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
                 };
 
                 UART2: serial@20064000 {
