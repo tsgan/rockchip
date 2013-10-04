@@ -81,6 +81,7 @@ static struct pmap_devmap fdt_devmap[FDT_DEVMAP_MAX] = {
 int
 platform_devmap_init(void)
 {
+
 	int i = 0;
 /*
 	fdt_devmap[i].pd_va = 0xFEA00000;
