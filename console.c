@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD$");
 #include <sys/kernel.h>
 
 #ifndef	RK30XX_UART_BASE
-#define	RK30XX_UART_BASE	0xFED64000 	/* UART2 */
+#define	RK30XX_UART_BASE	0xF0064000 	/* UART2 */
 #endif
 
 #define	REG_SHIFT	2

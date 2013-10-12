@@ -81,31 +81,9 @@ static struct pmap_devmap fdt_devmap[FDT_DEVMAP_MAX] = {
 int
 platform_devmap_init(void)
 {
-
 	int i = 0;
-/*
-	fdt_devmap[i].pd_va = 0xFEA00000;
-	fdt_devmap[i].pd_pa = 0x10000000;
-	fdt_devmap[i].pd_size = 0x100000;
-	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
-	fdt_devmap[i].pd_cache = PTE_DEVICE;
-	i++;
 
-	fdt_devmap[i].pd_va = 0xFEB00000;
-	fdt_devmap[i].pd_pa = 0x10100000;
-	fdt_devmap[i].pd_size = 0x100000;
-	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
-	fdt_devmap[i].pd_cache = PTE_DEVICE;
-	i++;
-
-	fdt_devmap[i].pd_va = 0xFEC00000;
-	fdt_devmap[i].pd_pa = 0x10200000;
-	fdt_devmap[i].pd_size = 0x100000;
-	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
-	fdt_devmap[i].pd_cache = PTE_DEVICE;
-	i++;
-*/
-	fdt_devmap[i].pd_va = 0xFED00000;
+	fdt_devmap[i].pd_va = 0xF0000000;
 	fdt_devmap[i].pd_pa = 0x20000000;
 	fdt_devmap[i].pd_size = 0x100000;
 	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
