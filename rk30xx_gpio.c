@@ -101,11 +101,11 @@ struct rk30_gpio_softc {
 #define RK30_GPIO_EXT_PORT 		0x50
 #define RK30_GPIO_LS_SYNC 		0x60
 
-#define RK30_PMU_BASE			0xF0004000
+#define RK30_PMU_BASE			0xFED04000
 #define PMU_GPIO0A_PULL			0x64
 #define PMU_GPIO0B_PULL 		0x68
 
-#define RK30_GRF_BASE			0xF0008000
+#define RK30_GRF_BASE			0xFED08000
 #define GRF_GPIO0B_PULL 		0x0164
 #define GRF_GPIO0C_PULL 		0x0168
 #define GRF_GPIO0D_PULL 		0x016c
