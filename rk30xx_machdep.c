@@ -83,7 +83,7 @@ platform_devmap_init(void)
 {
 	int i = 0;
 
-	fdt_devmap[i].pd_va = 0xFED00000;
+	fdt_devmap[i].pd_va = 0xF0000000;
 	fdt_devmap[i].pd_pa = 0x20000000;
 	fdt_devmap[i].pd_size = 0x100000;
 	fdt_devmap[i].pd_prot = VM_PROT_READ | VM_PROT_WRITE;
