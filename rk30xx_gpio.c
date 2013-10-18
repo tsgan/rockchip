@@ -52,6 +52,8 @@ __FBSDID("$FreeBSD$");
 #include <dev/ofw/ofw_bus.h>
 #include <dev/ofw/ofw_bus_subr.h>
 
+#include "rk30xx_grf.h"
+
 #include "gpio_if.h"
 
 /*
@@ -104,11 +106,6 @@ struct rk30_gpio_softc {
 #define RK30_PMU_BASE			0xF0004000
 #define PMU_GPIO0A_PULL			0x64
 #define PMU_GPIO0B_PULL 		0x68
-
-#define RK30_GRF_BASE			0xF0008000
-#define GRF_GPIO0B_PULL 		0x0164
-#define GRF_GPIO0C_PULL 		0x0168
-#define GRF_GPIO0D_PULL 		0x016c
 
 #define RK30_GPIO_WRITE(_sc, _off, _val)		\
     bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
@@ -182,12 +179,8 @@ rk30_gpio_set_pud(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t state)
 		    ((pin / 8) * 4));
 		pin = (pin % 8) * 2;
 		REG_WRITE(base, (0x3 << (16 + pin)) | (state << pin));
-	} else {
-		base = (uint32_t *)(RK30_GRF_BASE + GRF_GPIO0B_PULL - 4 + bank * 16 + 
-		    ((pin / 8) * 4));
-		pin = (7 - (pin % 8)) * 2;
-		REG_WRITE(base, (0x3 << (16 + pin)) | (state << pin));
-	}
+	} else
+		rk30_grf_gpio_pud(bank, pin, state);
 }
 
 static void

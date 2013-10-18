@@ -43,7 +43,7 @@
 
         aliases {
                 soc = &SOC;
-                UART2 = &UART2;
+                UART0 = &UART0;
         };
   
         SOC: rk3188 {
@@ -59,6 +59,13 @@
                                 <0x1013c100 0x0100>;    /* CPU Interface Registers */
                         interrupt-controller;
                         #interrupt-cells = <1>;
+                };
+
+                grf@20008000 {
+                        compatible = "rockchip,rk30xx-grf";
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+                        reg = < 0x20008000 0x2000 >;
                 };
 
                 // ARM Cortex A9 TWD Timer
@@ -131,12 +138,11 @@
                         #size-cells = <0>;
                 };
 
-                UART2: serial@20064000 {
+                UART0: serial@20064000 {
                         status = "okay";
                         compatible = "ns16550";
                         reg = <0x20064000 0x400>;
                         reg-shift = <2>;
-			reg-io-width = <1>;
                         interrupts = <68>;
                         interrupt-parent = <&GIC>;
                         current-speed = <115200>;
@@ -149,8 +155,8 @@
                 
         chosen {
                 bootargs = "-v";
-                stdin = "UART2";
-                stdout = "UART2";
+                stdin = "UART0";
+                stdout = "UART0";
         };
 };
 
