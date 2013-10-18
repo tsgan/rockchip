@@ -52,6 +52,7 @@ __FBSDID("$FreeBSD$");
 #include <dev/ofw/ofw_bus.h>
 #include <dev/ofw/ofw_bus_subr.h>
 
+#include "rk30xx_pmu.h"
 #include "rk30xx_grf.h"
 
 #include "gpio_if.h"
@@ -103,17 +104,10 @@ struct rk30_gpio_softc {
 #define RK30_GPIO_EXT_PORT 		0x50
 #define RK30_GPIO_LS_SYNC 		0x60
 
-#define RK30_PMU_BASE			0xF0004000
-#define PMU_GPIO0A_PULL			0x64
-#define PMU_GPIO0B_PULL 		0x68
-
 #define RK30_GPIO_WRITE(_sc, _off, _val)		\
     bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
 #define RK30_GPIO_READ(_sc, _off)			\
     bus_space_read_4(_sc->sc_bst, _sc->sc_bsh, _off)
-
-#define REG_READ(reg)                   (*(volatile uint32_t *)(reg))
-#define REG_WRITE(reg, val)             (*(volatile uint32_t *)(reg) = (val))
 
 static uint32_t
 rk30_gpio_get_function(struct rk30_gpio_softc *sc, uint32_t pin)
@@ -167,19 +161,15 @@ static void
 rk30_gpio_set_pud(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t state)
 {
 	uint32_t bank;
-	uint32_t *base;
 
 	bank = pin / 32;
 
 	/* Must be called with lock held. */
 	RK30_GPIO_LOCK_ASSERT(sc);
 
-	if (bank == 0 && pin < 12) {
-		base = (uint32_t *)(RK30_PMU_BASE + PMU_GPIO0A_PULL + 
-		    ((pin / 8) * 4));
-		pin = (pin % 8) * 2;
-		REG_WRITE(base, (0x3 << (16 + pin)) | (state << pin));
-	} else
+	if (bank == 0 && pin < 12)
+		rk30_pmu_gpio_pud(pin, state);
+	else
 		rk30_grf_gpio_pud(bank, pin, state);
 }
 

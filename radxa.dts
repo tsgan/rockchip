@@ -61,6 +61,13 @@
                         #interrupt-cells = <1>;
                 };
 
+		pmu@20004000 {
+			compatible = "rockchip,rk30xx-pmu";
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+			reg = <0x20004000 0x100>;
+		};
+
                 grf@20008000 {
                         compatible = "rockchip,rk30xx-grf";
                         #address-cells = <1>;
