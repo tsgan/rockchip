@@ -29,10 +29,10 @@
 #ifndef _RK30_PMU_H_
 #define _RK30_PMU_H_
 
-#define RK30_PMU_BASE 			0xF0004000
+#define RK30_PMU_BASE			0xF0004000
 
-#define PMU_WAKEUP_CFG0			0x00
-#define PMU_WAKEUP_CFG1			0x04
+#define PMU_WAKEUP_CFG0 		0x00
+#define PMU_WAKEUP_CFG1 		0x04
 #define PMU_PWRDN_CON			0x08
 #define PMU_PWRDN_ST			0x0c
 #define PMU_INT_CON			0x10
@@ -52,8 +52,8 @@
 #define PMU_SYS_REG2			0x48
 #define PMU_SYS_REG3			0x4c
 #define PMU_STOP_INT_DLY		0x60
-#define PMU_GPIO0A_PULL			0x64
-#define PMU_GPIO0B_PULL			0x68
+#define PMU_GPIO0A_PULL 		0x64
+#define PMU_GPIO0B_PULL 		0x68
 
 void rk30_pmu_gpio_pud(uint32_t pin, uint32_t state);
 

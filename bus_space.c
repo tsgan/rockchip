@@ -47,7 +47,7 @@ struct bus_space _base_tag = {
 	.bs_cookie	= (void *) 0,
 	
 	/* mapping/unmapping */
-	.bs_map		= generic_bs_map,
+	.bs_map 	= generic_bs_map,
 	.bs_unmap	= generic_bs_unmap,
 	.bs_subregion	= generic_bs_subregion,
 	
@@ -59,10 +59,10 @@ struct bus_space _base_tag = {
 	.bs_barrier	= generic_bs_barrier,
 	
 	/* read (single) */
-	.bs_r_1		= generic_bs_r_1,
-	.bs_r_2		= generic_armv4_bs_r_2,
-	.bs_r_4		= generic_bs_r_4,
-	.bs_r_8		= NULL,
+	.bs_r_1 	= generic_bs_r_1,
+	.bs_r_2 	= generic_armv4_bs_r_2,
+	.bs_r_4 	= generic_bs_r_4,
+	.bs_r_8 	= NULL,
 	
 	/* read multiple */
 	.bs_rm_1	= generic_bs_rm_1,
@@ -77,10 +77,10 @@ struct bus_space _base_tag = {
 	.bs_rr_8	= NULL,
 	
 	/* write (single) */
-	.bs_w_1		= generic_bs_w_1,
-	.bs_w_2		= generic_armv4_bs_w_2,
-	.bs_w_4		= generic_bs_w_4,
-	.bs_w_8		= NULL,
+	.bs_w_1 	= generic_bs_w_1,
+	.bs_w_2 	= generic_armv4_bs_w_2,
+	.bs_w_4 	= generic_bs_w_4,
+	.bs_w_8 	= NULL,
 	
 	/* write multiple */
 	.bs_wm_1	= generic_bs_wm_1,
@@ -104,10 +104,10 @@ struct bus_space _base_tag = {
 	.bs_sr_8	= NULL,
 	
 	/* copy */
-	.bs_c_1		= NULL,
-	.bs_c_2		= generic_armv4_bs_c_2,
-	.bs_c_4		= NULL,
-	.bs_c_8		= NULL,
+	.bs_c_1 	= NULL,
+	.bs_c_2 	= generic_armv4_bs_c_2,
+	.bs_c_4 	= NULL,
+	.bs_c_8 	= NULL,
 };
 
 bus_space_tag_t fdtbus_bs_tag = &_base_tag;

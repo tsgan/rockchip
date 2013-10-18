@@ -62,7 +62,7 @@ struct rk30_pmu_softc {
 
 static struct rk30_pmu_softc *rk30_pmu_sc = NULL;
 
-#define pmu_read_4(sc, reg) 	\
+#define pmu_read_4(sc, reg) 		\
 	bus_space_read_4((sc)->bst, (sc)->bsh, (reg))
 #define pmu_write_4(sc, reg, val)	\
 	bus_space_write_4((sc)->bst, (sc)->bsh, (reg), (val))
@@ -121,10 +121,10 @@ DRIVER_MODULE(rk30_pmu, simplebus, rk30_pmu_driver, rk30_pmu_devclass, 0, 0);
 void
 rk30_pmu_gpio_pud(uint32_t pin, uint32_t state)
 {
-        uint32_t offset;
+	uint32_t offset;
 
-        offset = PMU_GPIO0A_PULL + ((pin / 8) * 4);
-        pin = (pin % 8) * 2;
-        pmu_write_4(rk30_pmu_sc, offset, (0x3 << (16 + pin)) | (state << pin));
+	offset = PMU_GPIO0A_PULL + ((pin / 8) * 4);
+	pin = (pin % 8) * 2;
+	pmu_write_4(rk30_pmu_sc, offset, (0x3 << (16 + pin)) | (state << pin));
 }
 

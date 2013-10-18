@@ -72,7 +72,7 @@ __FBSDID("$FreeBSD$");
 #define RK30_GPIO_PULLUP		1
 #define RK30_GPIO_PULLDOWN		2
 
-#define RK30_GPIO_INPUT			0
+#define RK30_GPIO_INPUT 		0
 #define RK30_GPIO_OUTPUT		1
 
 struct rk30_gpio_softc {
@@ -80,29 +80,29 @@ struct rk30_gpio_softc {
 	struct mtx		sc_mtx;
 	struct resource *	sc_mem_res;
 	struct resource *	sc_irq_res;
-	bus_space_tag_t		sc_bst;
+	bus_space_tag_t 	sc_bst;
 	bus_space_handle_t	sc_bsh;
 	void *			sc_intrhand;
 	int			sc_gpio_npins;
-	struct gpio_pin		sc_gpio_pins[RK30_GPIO_PINS];
+	struct gpio_pin 	sc_gpio_pins[RK30_GPIO_PINS];
 };
 
 #define RK30_GPIO_LOCK(_sc)		mtx_lock(&_sc->sc_mtx)
-#define RK30_GPIO_UNLOCK(_sc) 	mtx_unlock(&_sc->sc_mtx)
+#define RK30_GPIO_UNLOCK(_sc)		mtx_unlock(&_sc->sc_mtx)
 #define RK30_GPIO_LOCK_ASSERT(_sc)	mtx_assert(&_sc->sc_mtx, MA_OWNED)
 
-#define RK30_GPIO_SWPORT_DR 		0x00
-#define RK30_GPIO_SWPORT_DDR 		0x04
+#define RK30_GPIO_SWPORT_DR		0x00
+#define RK30_GPIO_SWPORT_DDR		0x04
 #define RK30_GPIO_INTEN 		0x30
-#define RK30_GPIO_INTMASK 		0x34
+#define RK30_GPIO_INTMASK		0x34
 #define RK30_GPIO_INTTYPE_LEVEL 	0x38
-#define RK30_GPIO_INT_POLARITY 	0x3c
-#define RK30_GPIO_INT_STATUS 		0x40
+#define RK30_GPIO_INT_POLARITY		0x3c
+#define RK30_GPIO_INT_STATUS		0x40
 #define RK30_GPIO_INT_RAWSTATUS 	0x44
-#define RK30_GPIO_DEBOUNCE 		0x48
-#define RK30_GPIO_PORTS_EOI 		0x4c
-#define RK30_GPIO_EXT_PORT 		0x50
-#define RK30_GPIO_LS_SYNC 		0x60
+#define RK30_GPIO_DEBOUNCE		0x48
+#define RK30_GPIO_PORTS_EOI		0x4c
+#define RK30_GPIO_EXT_PORT		0x50
+#define RK30_GPIO_LS_SYNC		0x60
 
 #define RK30_GPIO_WRITE(_sc, _off, _val)		\
     bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
@@ -421,6 +421,7 @@ rk30_gpio_pin_toggle(device_t dev, uint32_t pin)
 static int
 rk30_gpio_probe(device_t dev)
 {
+
 	if (!ofw_bus_is_compatible(dev, "rockchip,rk30xx-gpio"))
 		return (ENXIO);
 

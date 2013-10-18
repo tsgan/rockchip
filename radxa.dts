@@ -31,61 +31,61 @@
 / {
 	model = "Radxa RadxaRock";
 	compatible = "rockchip,rk3188";
-        #address-cells = <1>;
-        #size-cells = <1>;
+	#address-cells = <1>;
+	#size-cells = <1>;
 
 	interrupt-parent = <&GIC>;
 
-        memory {
-                device_type = "memory";
-                reg = < 0x60000000 0x80000000 >;        /* 2GB RAM */
-        };
+	memory {
+		device_type = "memory";
+		reg = < 0x60000000 0x80000000 >;	/* 2GB RAM */
+	};
 
-        aliases {
-                soc = &SOC;
-                UART0 = &UART0;
-        };
-  
-        SOC: rk3188 {
+	aliases {
+		soc = &SOC;
+		UART0 = &UART0;
+	};
+
+	SOC: rk3188 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		compatible = "simple-bus";
 		ranges;
-                bus-frequency = <0>;
+		bus-frequency = <0>;
 
-                GIC: interrupt-controller@1013d000 {
-                        compatible = "arm,gic";
-                        reg =   <0x1013d000 0x1000>,    /* Distributor Registers */
-                                <0x1013c100 0x0100>;    /* CPU Interface Registers */
-                        interrupt-controller;
-                        #interrupt-cells = <1>;
-                };
+		GIC: interrupt-controller@1013d000 {
+			compatible = "arm,gic";
+			reg =	<0x1013d000 0x1000>,	/* Distributor Registers */
+				<0x1013c100 0x0100>;	/* CPU Interface Registers */
+			interrupt-controller;
+			#interrupt-cells = <1>;
+		};
 
 		pmu@20004000 {
 			compatible = "rockchip,rk30xx-pmu";
-                        #address-cells = <1>;
-                        #size-cells = <1>;
+			#address-cells = <1>;
+			#size-cells = <1>;
 			reg = <0x20004000 0x100>;
 		};
 
-                grf@20008000 {
-                        compatible = "rockchip,rk30xx-grf";
-                        #address-cells = <1>;
-                        #size-cells = <1>;
-                        reg = < 0x20008000 0x2000 >;
-                };
+		grf@20008000 {
+			compatible = "rockchip,rk30xx-grf";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = < 0x20008000 0x2000 >;
+		};
 
-                // ARM Cortex A9 TWD Timer
-                timer@1013c600 {
-                        compatible = "arm,mpcore-timers";
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                        clock-frequency = < 148500000 >;
-                        reg = <0x1013c200 0x100>, // Global Timer Regs
-                              <0x1013c600 0x20>;  // Private Timer Regs
-                        interrupts = < 27 29 >;
-                        interrupt-parent = <&GIC>;
-                };
+		// ARM Cortex A9 TWD Timer
+		timer@1013c600 {
+			compatible = "arm,mpcore-timers";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			clock-frequency = < 148500000 >;
+			reg =	<0x1013c200 0x100>, // Global Timer Regs
+				<0x1013c600 0x20>;  // Private Timer Regs
+			interrupts = < 27 29 >;
+			interrupt-parent = <&GIC>;
+		};
 
 		gpio0: gpio@2000a000 {
 			compatible = "rockchip,rk30xx-gpio";
@@ -93,7 +93,7 @@
 			#gpio-cells = <2>;
 			reg = <0x2000a000 0x100>;
 			interrupts = <86>;
-                        interrupt-parent = <&GIC>;
+			interrupt-parent = <&GIC>;
 		};
 
 		gpio1: gpio@2003c000 {
@@ -102,7 +102,7 @@
 			#gpio-cells = <2>;
 			reg = <0x2003c000 0x100>;
 			interrupts = <87>;
-                        interrupt-parent = <&GIC>;
+			interrupt-parent = <&GIC>;
 		};
 
 		gpio2: gpio@2003e000 {
@@ -111,7 +111,7 @@
 			#gpio-cells = <2>;
 			reg = <0x2003e000 0x100>;
 			interrupts = <88>;
-                        interrupt-parent = <&GIC>;
+			interrupt-parent = <&GIC>;
 		};
 
 		gpio3: gpio@20080000 {
@@ -120,50 +120,49 @@
 			#gpio-cells = <2>;
 			reg = <0x20080000 0x100>;
 			interrupts = <89>;
-                        interrupt-parent = <&GIC>;
+			interrupt-parent = <&GIC>;
 		};
 
-                usb0: usb@10180000 {
-                        compatible = "broadcom,bcm2835-usb",
-                                     "broadcom,bcm2708-usb",
-                                     "synopsys,designware-hs-otg2";
-                        reg = <0x10180000 0x40000>;
-                        interrupts = <48>;
-                        interrupt-parent = <&GIC>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                };
+		usb0: usb@10180000 {
+			compatible = "broadcom,bcm2835-usb",
+				     "broadcom,bcm2708-usb",
+				     "synopsys,designware-hs-otg2";
+			reg = <0x10180000 0x40000>;
+			interrupts = <48>;
+			interrupt-parent = <&GIC>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
 
-                usb1: usb@101c0000 {
-                        compatible = "broadcom,bcm2835-usb",
-                                     "broadcom,bcm2708-usb",
-                                     "synopsys,designware-hs-otg2";
-                        reg = <0x101c0000 0x40000>;
-                        interrupts = < 49 >;
-                        interrupt-parent = <&GIC>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                };
+		usb1: usb@101c0000 {
+			compatible = "broadcom,bcm2835-usb",
+				     "broadcom,bcm2708-usb",
+				     "synopsys,designware-hs-otg2";
+			reg = <0x101c0000 0x40000>;
+			interrupts = < 49 >;
+			interrupt-parent = <&GIC>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
 
-                UART0: serial@20064000 {
-                        status = "okay";
-                        compatible = "ns16550";
-                        reg = <0x20064000 0x400>;
-                        reg-shift = <2>;
-                        interrupts = <68>;
-                        interrupt-parent = <&GIC>;
-                        current-speed = <115200>;
-                        clock-frequency = < 24000000 >;
-                        busy-detect = <1>;
-                        broken-txfifo = <1>;
-                };
-
+		UART0: serial@20064000 {
+			status = "okay";
+			compatible = "ns16550";
+			reg = <0x20064000 0x400>;
+			reg-shift = <2>;
+			interrupts = <68>;
+			interrupt-parent = <&GIC>;
+			current-speed = <115200>;
+			clock-frequency = < 24000000 >;
+			busy-detect = <1>;
+			broken-txfifo = <1>;
+		};
 	};
-                
-        chosen {
-                bootargs = "-v";
-                stdin = "UART0";
-                stdout = "UART0";
-        };
+
+	chosen {
+		bootargs = "-v";
+		stdin = "UART0";
+		stdout = "UART0";
+	};
 };
 

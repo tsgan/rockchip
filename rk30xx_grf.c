@@ -62,7 +62,7 @@ struct rk30_grf_softc {
 
 static struct rk30_grf_softc *rk30_grf_sc = NULL;
 
-#define grf_read_4(sc, reg) 	\
+#define grf_read_4(sc, reg) 		\
 	bus_space_read_4((sc)->bst, (sc)->bsh, (reg))
 #define grf_write_4(sc, reg, val)	\
 	bus_space_write_4((sc)->bst, (sc)->bsh, (reg), (val))
@@ -121,10 +121,10 @@ DRIVER_MODULE(rk30_grf, simplebus, rk30_grf_driver, rk30_grf_devclass, 0, 0);
 void
 rk30_grf_gpio_pud(uint32_t bank, uint32_t pin, uint32_t state)
 {
-        uint32_t offset;
+	uint32_t offset;
 
-        offset = GRF_GPIO0B_PULL - 4 + bank * 16 + ((pin / 8) * 4);
-        pin = (7 - (pin % 8)) * 2;
-        grf_write_4(rk30_grf_sc, offset, (0x3 << (16 + pin)) | (state << pin));
+	offset = GRF_GPIO0B_PULL - 4 + bank * 16 + ((pin / 8) * 4);
+	pin = (7 - (pin % 8)) * 2;
+	grf_write_4(rk30_grf_sc, offset, (0x3 << (16 + pin)) | (state << pin));
 }
 

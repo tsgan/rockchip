@@ -54,7 +54,7 @@ options 	VFP		# vfp/neon
 # Debugging
 makeoptions	DEBUG=-g		#Build kernel with gdb(1) debug symbols
 options 	BREAK_TO_DEBUGGER
-#options 	VERBOSE_SYSINIT		#Enable verbose sysinit messages
+#options 	VERBOSE_SYSINIT 	#Enable verbose sysinit messages
 options 	KDB
 options 	DDB			#Enable the kernel debugger
 #options 	INVARIANTS		#Enable calls of extra sanity checking
@@ -114,7 +114,7 @@ options 	USB_DEBUG
 #options 	USB_VERBOSE
 #device 	uhci
 #device 	ohci
-#device		ehci
+#device 	ehci
 device          dwcotg          #DWC OTG controller
 
 device		umass

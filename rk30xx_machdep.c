@@ -52,7 +52,6 @@ __FBSDID("$FreeBSD$");
 /* Start of address space used for bootstrap map */
 #define DEVMAP_BOOTSTRAP_MAP_START      0xF0000000
 
-
 vm_offset_t
 initarm_lastaddr(void)
 {
