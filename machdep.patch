@@ -1,20 +1,8 @@
 Index: machdep.c
 ===================================================================
---- machdep.c   (revision 255634)
+--- machdep.c   (revision 256766)
 +++ machdep.c   (working copy)
-@@ -1390,8 +1390,9 @@
-        pmap_curmaxkvaddr = l2_start + (l2size - 1) * L1_S_SIZE;
- 
-        /* Map kernel code and data */
--       pmap_map_chunk(l1pagetable, KERNVIRTADDR, KERNPHYSADDR,
--          (((uint32_t)(lastaddr) - KERNVIRTADDR) + PAGE_MASK) & ~PAGE_MASK,
-+       pmap_map_chunk(l1pagetable, rounddown2(KERNVIRTADDR, 0x100000),
-+           rounddown2(KERNPHYSADDR, 0x100000), (((uint32_t)(lastaddr) -
-+           rounddown2(KERNVIRTADDR, 0x100000)) + PAGE_MASK) & ~PAGE_MASK,
-            VM_PROT_READ|VM_PROT_WRITE, PTE_CACHE);
- 
- 
-@@ -1485,6 +1486,9 @@
+@@ -1489,6 +1489,9 @@
  
         init_proc0(kernelstack.pv_va);
  
@@ -24,3 +12,4 @@ Index: machdep.c
         arm_intrnames_init();
         arm_vector_init(ARM_VECTORS_HIGH, ARM_VEC_ALL);
         arm_dump_avail_init(memsize, sizeof(dump_avail) / sizeof(dump_avail[0]));
+
