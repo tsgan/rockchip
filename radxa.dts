@@ -75,14 +75,13 @@
 			reg = < 0x20008000 0x2000 >;
 		};
 
-		// ARM Cortex A9 TWD Timer
 		timer@1013c600 {
 			compatible = "arm,mpcore-timers";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			clock-frequency = < 148500000 >;
-			reg =	<0x1013c200 0x100>, // Global Timer Regs
-				<0x1013c600 0x20>;  // Private Timer Regs
+			reg =	<0x1013c200 0x100>,	/* Global Timer Regs */
+				<0x1013c600 0x20>; 	/* Private Timer Regs */
 			interrupts = < 27 29 >;
 			interrupt-parent = <&GIC>;
 		};

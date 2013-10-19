@@ -55,16 +55,16 @@ __FBSDID("$FreeBSD$");
 #include "rk30xx_grf.h"
 
 struct rk30_grf_softc {
-	struct resource 	*res;
-	bus_space_tag_t 	bst;
+	struct resource		*res;
+	bus_space_tag_t		bst;
 	bus_space_handle_t	bsh;
 };
 
 static struct rk30_grf_softc *rk30_grf_sc = NULL;
 
-#define grf_read_4(sc, reg) 		\
+#define	grf_read_4(sc, reg)		\
 	bus_space_read_4((sc)->bst, (sc)->bsh, (reg))
-#define grf_write_4(sc, reg, val)	\
+#define	grf_write_4(sc, reg, val)	\
 	bus_space_write_4((sc)->bst, (sc)->bsh, (reg), (val))
 
 static int
@@ -72,7 +72,7 @@ rk30_grf_probe(device_t dev)
 {
 
 	if (ofw_bus_is_compatible(dev, "rockchip,rk30xx-grf")) {
-		device_set_desc(dev, "RK30XX General Register File Module");
+		device_set_desc(dev, "RK30XX General Register File");
 		return(BUS_PROBE_DEFAULT);
 	}
 
@@ -103,7 +103,7 @@ rk30_grf_attach(device_t dev)
 }
 
 static device_method_t rk30_grf_methods[] = {
-	DEVMETHOD(device_probe, 	rk30_grf_probe),
+	DEVMETHOD(device_probe,		rk30_grf_probe),
 	DEVMETHOD(device_attach,	rk30_grf_attach),
 	{ 0, 0 }
 };
@@ -123,7 +123,7 @@ rk30_grf_gpio_pud(uint32_t bank, uint32_t pin, uint32_t state)
 {
 	uint32_t offset;
 
-	offset = GRF_GPIO0B_PULL - 4 + bank * 16 + ((pin / 8) * 4);
+	offset = GRF_GPIO0B_PULL - 4 + (bank * 16) + ((pin / 8) * 4);
 	pin = (7 - (pin % 8)) * 2;
 	grf_write_4(rk30_grf_sc, offset, (0x3 << (16 + pin)) | (state << pin));
 }

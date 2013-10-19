@@ -55,16 +55,16 @@ __FBSDID("$FreeBSD$");
 #include "rk30xx_pmu.h"
 
 struct rk30_pmu_softc {
-	struct resource 	*res;
-	bus_space_tag_t 	bst;
+	struct resource		*res;
+	bus_space_tag_t		bst;
 	bus_space_handle_t	bsh;
 };
 
 static struct rk30_pmu_softc *rk30_pmu_sc = NULL;
 
-#define pmu_read_4(sc, reg) 		\
+#define	pmu_read_4(sc, reg)		\
 	bus_space_read_4((sc)->bst, (sc)->bsh, (reg))
-#define pmu_write_4(sc, reg, val)	\
+#define	pmu_write_4(sc, reg, val)	\
 	bus_space_write_4((sc)->bst, (sc)->bsh, (reg), (val))
 
 static int
@@ -103,7 +103,7 @@ rk30_pmu_attach(device_t dev)
 }
 
 static device_method_t rk30_pmu_methods[] = {
-	DEVMETHOD(device_probe, 	rk30_pmu_probe),
+	DEVMETHOD(device_probe,		rk30_pmu_probe),
 	DEVMETHOD(device_attach,	rk30_pmu_attach),
 	{ 0, 0 }
 };

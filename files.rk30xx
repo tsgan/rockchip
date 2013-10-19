@@ -1,7 +1,7 @@
 # $FreeBSD$
-kern/kern_clocksource.c 		standard
+kern/kern_clocksource.c			standard
 
-arm/arm/bus_space_asm_generic.S 	standard
+arm/arm/bus_space_asm_generic.S		standard
 arm/arm/bus_space_generic.c		standard
 arm/arm/cpufunc_asm_armv5.S		standard
 arm/arm/cpufunc_asm_arm10.S		standard
@@ -18,6 +18,4 @@ arm/rockchip/rk30xx_machdep.c		standard
 arm/rockchip/rk30xx_pmu.c		standard
 arm/rockchip/rk30xx_grf.c		standard
 arm/rockchip/rk30xx_gpio.c		optional	gpio
-arm/rockchip/dwc_otg_brcm.c		optional	dwcotg
-
-
+arm/broadcom/bcm2835/dwc_otg_brcm.c	optional	dwcotg

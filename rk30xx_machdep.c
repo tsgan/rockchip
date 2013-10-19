@@ -50,7 +50,7 @@ __FBSDID("$FreeBSD$");
 #include <dev/fdt/fdt_common.h>
 
 /* Start of address space used for bootstrap map */
-#define DEVMAP_BOOTSTRAP_MAP_START      0xF0000000
+#define DEVMAP_BOOTSTRAP_MAP_START	0xF0000000
 
 vm_offset_t
 initarm_lastaddr(void)
@@ -97,18 +97,21 @@ platform_devmap_init(void)
 struct arm32_dma_range *
 bus_dma_get_range(void)
 {
+
 	return (NULL);
 }
 
 int
 bus_dma_get_range_nb(void)
 {
+
 	return (0);
 }
 
 void
 cpu_reset()
 {
+
 	printf("Reset failed!\n");
 	while (1);
 }
