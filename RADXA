@@ -115,5 +115,5 @@ device		udav
 # Flattened Device Tree
 options		FDT
 options		FDT_DTB_STATIC
-makeoptions	FDT_DTS_FILE=radxa.dts
+makeoptions	FDT_DTS_FILE=rk3188-radxa.dts
 
