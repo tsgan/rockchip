@@ -42,6 +42,7 @@ __FBSDID("$FreeBSD$");
 #include <vm/vm.h>
 #include <vm/pmap.h>
 
+#include <machine/armreg.h>
 #include <machine/bus.h>
 #include <machine/frame.h> /* For trapframe_t, used in <machine/machdep.h> */
 #include <machine/machdep.h>
@@ -67,6 +68,10 @@ initarm_gpio_init(void)
 void
 initarm_late_init(void)
 {
+
+	/* Enable cache */
+	cpufunc_control(CPU_CONTROL_DC_ENABLE|CPU_CONTROL_IC_ENABLE,
+	    CPU_CONTROL_DC_ENABLE|CPU_CONTROL_IC_ENABLE);
 }
 
 #define FDT_DEVMAP_MAX		(1 + 2 + 1 + 1)

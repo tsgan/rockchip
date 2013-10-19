@@ -115,7 +115,7 @@ rk30_gpio_get_function(struct rk30_gpio_softc *sc, uint32_t pin)
 	uint32_t bank, func, offset;
 
 	bank = pin / 32;
-	pin = pin - 32 * bank;
+	pin = pin % 32;
 	offset = 1 << pin;
 
 	func = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
@@ -146,7 +146,7 @@ rk30_gpio_set_function(struct rk30_gpio_softc *sc, uint32_t pin, uint32_t f)
 	RK30_GPIO_LOCK_ASSERT(sc);
 
 	bank = pin / 32;
-	pin = pin - 32 * bank;
+	pin = pin % 32;
 	offset = 1 << pin;
 
 	data = RK30_GPIO_READ(sc, RK30_GPIO_SWPORT_DDR);
@@ -334,7 +334,7 @@ rk30_gpio_pin_set(device_t dev, uint32_t pin, unsigned int value)
 		return (EINVAL);
 
 	bank = pin / 32;
-	pin = pin - 32 * bank;
+	pin = pin % 32;
 	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
@@ -369,7 +369,7 @@ rk30_gpio_pin_get(device_t dev, uint32_t pin, unsigned int *val)
 		return (EINVAL);
 
 	bank = pin / 32;
-	pin = pin - 32 * bank;
+	pin = pin % 32;
 	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
@@ -396,7 +396,7 @@ rk30_gpio_pin_toggle(device_t dev, uint32_t pin)
 		return (EINVAL);
 
 	bank = pin / 32;
-	pin = pin - 32 * bank;
+	pin = pin % 32;
 	offset = 1 << pin;
 
 	RK30_GPIO_LOCK(sc);
