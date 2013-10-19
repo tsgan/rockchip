@@ -117,6 +117,6 @@ void
 cpu_reset()
 {
 
-	printf("Reset failed!\n");
+	printf("No cpu_reset implementation!\n");
 	while (1);
 }
