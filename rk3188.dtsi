@@ -72,7 +72,7 @@
 			#size-cells = <0>;
 			clock-frequency = < 148500000 >;
 			reg =	<0x1013c200 0x100>,	/* Global Timer Regs */
-				<0x1013c600 0x20>; 	/* Private Timer Regs */
+				<0x1013c600 0x20>;	/* Private Timer Regs */
 			interrupts = < 27 29 >;
 			interrupt-parent = <&GIC>;
 		};
