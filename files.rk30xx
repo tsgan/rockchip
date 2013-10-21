@@ -18,4 +18,4 @@ arm/rockchip/rk30xx_machdep.c		standard
 arm/rockchip/rk30xx_pmu.c		standard
 arm/rockchip/rk30xx_grf.c		standard
 arm/rockchip/rk30xx_gpio.c		optional	gpio
-arm/broadcom/bcm2835/dwc_otg_brcm.c	optional	dwcotg
+dev/usb/controller/dwc_otg_fdt.c	optional	dwcotg
