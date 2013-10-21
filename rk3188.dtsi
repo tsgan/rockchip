@@ -31,8 +31,6 @@
 	#address-cells = <1>;
 	#size-cells = <1>;
 
-	interrupt-parent = <&GIC>;
-
 	aliases {
 		soc = &SOC;
 	};
@@ -83,6 +81,7 @@
 			reg = <0x20038000 0x20>;
 			interrupts = <76>;
 			clocks = <24000000>;
+			status = "disabled";
 		};
 
 		timer@20038020 {
@@ -90,6 +89,7 @@
 			reg = <0x20038020 0x20>;
 			interrupts = <77>;
 			clocks = <24000000>;
+			status = "disabled";
 		};
 
 		timer@20038060 {
@@ -97,6 +97,7 @@
 			reg = <0x20038060 0x20>;
 			interrupts = <91>;
 			clocks = <24000000>;
+			status = "disabled";
 		};
 
 		timer@20038080 {
@@ -104,6 +105,7 @@
 			reg = <0x20038080 0x20>;
 			interrupts = <92>;
 			clocks = <24000000>;
+			status = "disabled";
 		};
 
 		timer@200380a0 {
@@ -111,6 +113,7 @@
 			reg = <0x200380a0 0x20>;
 			interrupts = <96>;
 			clocks = <24000000>;
+			status = "disabled";
 		};
 
 		watchdog@2004c000 {
@@ -182,6 +185,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart1: serial@10126000 {
@@ -194,6 +198,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart2: serial@20064000 {
@@ -206,6 +211,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart3: serial@20068000 {
@@ -218,6 +224,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		mmc@10214000 {
