@@ -182,6 +182,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart1: serial@10126000 {
@@ -194,6 +195,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart2: serial@20064000 {
@@ -206,6 +208,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		uart3: serial@20068000 {
@@ -218,6 +221,7 @@
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
+			status = "disabled";
 		};
 
 		mmc@10214000 {

@@ -45,11 +45,11 @@
 	SOC: rk3188 {
 
 		uart0: serial@10124000 {
-			status = "disabled";
+			status = "okay";
 		};
 
 		uart1: serial@10126000 {
-			status = "disabled";
+			status = "okay";
 		};
 
 		uart2: serial@20064000 {
@@ -57,7 +57,7 @@
 		};
 
 		uart3: serial@20068000 {
-			status = "disabled";
+			status = "okay";
 		};
 	};
 
