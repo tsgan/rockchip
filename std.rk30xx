@@ -1,5 +1,5 @@
 # Rockchip rk30xx common options
-#$FreeBSD$
+#$FreeBSD: head/sys/arm/rockchip/std.rk30xx 256949 2013-10-23 00:39:43Z ganbold $
 
 cpu		CPU_CORTEXA
 machine		arm armv6

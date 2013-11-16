@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/sys/arm/rockchip/common.c 256949 2013-10-23 00:39:43Z ganbold $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

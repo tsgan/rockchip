@@ -32,7 +32,7 @@
 #include "opt_platform.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/sys/arm/rockchip/rk30xx_machdep.c 257669 2013-11-05 02:57:34Z ian $");
 
 #define _ARM32_BUS_DMA_PRIVATE
 #include <sys/param.h>
@@ -44,11 +44,12 @@ __FBSDID("$FreeBSD$");
 
 #include <machine/armreg.h>
 #include <machine/bus.h>
-#include <machine/frame.h> /* For trapframe_t, used in <machine/machdep.h> */
+#include <machine/devmap.h>
 #include <machine/machdep.h>
-#include <machine/pmap.h>
 
 #include <dev/fdt/fdt_common.h>
+
+#include <arm/rockchip/rk30xx_wdog.h>
 
 /* Start of address space used for bootstrap map */
 #define DEVMAP_BOOTSTRAP_MAP_START	0xF0000000
@@ -57,7 +58,13 @@ vm_offset_t
 initarm_lastaddr(void)
 {
 
-	return (DEVMAP_BOOTSTRAP_MAP_START - ARM_NOCACHE_KVA_SIZE);
+	return (DEVMAP_BOOTSTRAP_MAP_START);
+}
+
+void
+initarm_early_init(void)
+{
+
 }
 
 void
@@ -75,7 +82,7 @@ initarm_late_init(void)
 }
 
 #define FDT_DEVMAP_MAX		(1 + 2 + 1 + 1)
-static struct pmap_devmap fdt_devmap[FDT_DEVMAP_MAX] = {
+static struct arm_devmap_entry fdt_devmap[FDT_DEVMAP_MAX] = {
 	{ 0, 0, 0, 0, 0, }
 };
 
@@ -83,7 +90,7 @@ static struct pmap_devmap fdt_devmap[FDT_DEVMAP_MAX] = {
  * Construct pmap_devmap[] with DT-derived config data.
  */
 int
-platform_devmap_init(void)
+initarm_devmap_init(void)
 {
 	int i = 0;
 
@@ -94,8 +101,8 @@ platform_devmap_init(void)
 	fdt_devmap[i].pd_cache = PTE_DEVICE;
 	i++;
 
-	pmap_devmap_bootstrap_table = &fdt_devmap[0];
-
+	arm_devmap_register_table(&fdt_devmap[0]);
+	
 	return (0);
 }
 
@@ -117,6 +124,7 @@ void
 cpu_reset()
 {
 
-	printf("No cpu_reset implementation!\n");
+	rk30_wd_watchdog_reset();
+	printf("Reset failed!\n");
 	while (1);
 }
