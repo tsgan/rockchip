@@ -164,12 +164,7 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 			*error = 0;
 		}
 		else {
-			/*
-			 * Can't arm
-			 * disable watchdog as watchdog(9) requires
-			 */
-			device_printf(sc->dev,
-			    "Can't arm, timeout is more than 16 sec\n");
+			device_printf(sc->dev, "Can not be disabled\n");
 			mtx_unlock(&sc->mtx);
 			RK30_WDT_WRITE(sc, WDOG_CTRL, 0xa);
 			return;
