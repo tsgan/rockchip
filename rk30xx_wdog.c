@@ -181,20 +181,16 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 void
 rk30_wd_watchdog_reset()
 {
+	bus_space_handle_t bsh;
 
-	if (rk30_wd_sc == NULL) {
-		printf("Reset: watchdog device has not been initialized\n");
-		return;
-	}
-
-	RK30_WDT_WRITE(rk30_wd_sc, WDOG_TORR, 
+	bus_space_map(fdtbus_bs_tag, 0x2004c000, 0x100, 0, &bsh);
+	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_TORR,
 	    wd_intervals[0].value << WDOG_TORR_INTVL_SHIFT);
-	RK30_WDT_WRITE(rk30_wd_sc, WDOG_CTRL, 
+	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_CTRL,
 	    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | WDOG_CTRL_RST_PULSE);
 
 	for (;;)
 		;
-
 }
 
 static device_method_t rk30_wd_methods[] = {
