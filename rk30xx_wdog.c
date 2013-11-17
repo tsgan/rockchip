@@ -49,6 +49,11 @@ __FBSDID("$FreeBSD$");
 
 #include <arm/rockchip/rk30xx_wdog.h>
 
+#ifndef RK30_WDT_BASE
+#define	RK30_WDT_BASE		0x2004c000
+#define	RK30_WDT_PSIZE		0x100
+#endif
+
 #define	RK30_WDT_READ(_sc, _r)		bus_read_4((_sc)->res, (_r))
 #define	RK30_WDT_WRITE(_sc, _r, _v)	bus_write_4((_sc)->res, (_r), (_v))
 
@@ -66,7 +71,7 @@ __FBSDID("$FreeBSD$");
 #define	WDOG_EOI		0x14
 
 struct rk30_wd_interval {
-	uint64_t	milliseconds;
+	uint64_t	microseconds;
 	unsigned int	value;
 };
 
@@ -162,10 +167,10 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 	if (cmd > 0) {
 		ms = ((uint64_t)1 << (cmd & WD_INTERVAL)) / 1000000;
 		i = 0;
-		while (wd_intervals[i].milliseconds / sc->freq && 
-		    (ms > wd_intervals[i].milliseconds / sc->freq))
+		while (wd_intervals[i].microseconds / sc->freq && 
+		    (ms > wd_intervals[i].microseconds / sc->freq))
 			i++;
-		if (wd_intervals[i].milliseconds / sc->freq) {
+		if (wd_intervals[i].microseconds / sc->freq) {
 			RK30_WDT_WRITE(sc, WDOG_TORR, 
 			    wd_intervals[i].value << WDOG_TORR_INTVL_SHIFT);
 			RK30_WDT_WRITE(sc, WDOG_CTRL, 
@@ -192,7 +197,7 @@ rk30_wd_watchdog_reset()
 {
 	bus_space_handle_t bsh;
 
-	bus_space_map(fdtbus_bs_tag, 0x2004c000, 0x100, 0, &bsh);
+	bus_space_map(fdtbus_bs_tag, RK30_WDT_BASE, RK30_WDT_PSIZE, 0, &bsh);
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_TORR,
 	    wd_intervals[0].value << WDOG_TORR_INTVL_SHIFT);
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_CTRL,
