@@ -189,8 +189,7 @@ rk30_wd_watchdog_reset()
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_CTRL,
 	    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | WDOG_CTRL_RST_PULSE);
 
-	for (;;)
-		;
+	while (1);
 }
 
 static device_method_t rk30_wd_methods[] = {
