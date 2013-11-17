@@ -56,10 +56,12 @@ __FBSDID("$FreeBSD$");
 #define	WDOG_CTRL_EN		(1 << 0)
 #define	WDOG_CTRL_RSP_MODE	(1 << 1)
 #define	WDOG_CTRL_RST_PULSE	(4 << 2)
+#define	WDOG_CTRL_RST		0xa
 #define	WDOG_TORR		0x04
 #define	WDOG_TORR_INTVL_SHIFT	0
 #define	WDOG_CCVR		0x08
 #define	WDOG_CRR		0x0c
+#define	WDOG_CRR_PWD		0x76
 #define	WDOG_STAT		0x10
 #define	WDOG_EOI		0x14
 
@@ -160,18 +162,18 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 			RK30_WDT_WRITE(sc, WDOG_CTRL, 
 			    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | 
 			    WDOG_CTRL_RST_PULSE);
-			RK30_WDT_WRITE(sc, WDOG_CRR, 0x76);
+			RK30_WDT_WRITE(sc, WDOG_CRR, WDOG_CRR_PWD);
 			*error = 0;
 		}
 		else {
 			device_printf(sc->dev, "Can not be disabled\n");
 			mtx_unlock(&sc->mtx);
-			RK30_WDT_WRITE(sc, WDOG_CTRL, 0xa);
+			RK30_WDT_WRITE(sc, WDOG_CTRL, WDOG_CTRL_RST);
 			return;
 		}
 	}
 	else
-		RK30_WDT_WRITE(sc, WDOG_CTRL, 0xa);
+		RK30_WDT_WRITE(sc, WDOG_CTRL, WDOG_CTRL_RST);
 
 	mtx_unlock(&sc->mtx);
 }
