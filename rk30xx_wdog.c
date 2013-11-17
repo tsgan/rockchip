@@ -49,7 +49,7 @@ __FBSDID("$FreeBSD$");
 
 #include <arm/rockchip/rk30xx_wdog.h>
 
-#ifndef RK30_WDT_BASE
+#ifndef	RK30_WDT_BASE
 #define	RK30_WDT_BASE		0x2004c000
 #define	RK30_WDT_PSIZE		0x100
 #endif
