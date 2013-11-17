@@ -128,8 +128,8 @@ rk30_wd_attach(device_t dev)
 	sc->dev = dev;
 
 	node = ofw_bus_get_node(sc->dev);
-	if ((OF_getprop(node, "clock-frequency", &cell, sizeof(cell))) > 0)
-		sc->freq = (int)fdt32_to_cpu(cell) / 1000000;
+	if (OF_getencprop(node, "clock-frequency", &cell, sizeof(cell)) > 0)
+		sc->freq = cell / 1000000;
 	else
 		return (ENXIO);
 
