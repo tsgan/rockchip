@@ -71,22 +71,22 @@ struct rk30_wd_interval {
 };
 
 struct rk30_wd_interval wd_intervals[] = {
-	{     2730,	 0 },
-	{     5460,	 1 },
-	{    10920,	 2 },
-	{    21840,	 3 },
-	{    43680,	 4 },
-	{    87360,	 5 },
-	{   174720,	 6 },
-	{   349440,	 7 },
-	{   698880,	 8 },
-	{  1397760,	 9 },
-	{  2795520,	10 },
-	{  5591040,	11 },
-	{ 11182080,	12 },
-	{ 22364160,	13 },
-	{ 44728320,	14 },
-	{ 89456640,	15 },
+	{     0xffff,	 0 },
+	{    0x1ffff,	 1 },
+	{    0x3ffff,	 2 },
+	{    0x7ffff,	 3 },
+	{    0xfffff,	 4 },
+	{   0x1fffff,	 5 },
+	{   0x3fffff,	 6 },
+	{   0x7fffff,	 7 },
+	{   0xffffff,	 8 },
+	{  0x1ffffff,	 9 },
+	{  0x3ffffff,	10 },
+	{  0x7ffffff,	11 },
+	{  0xfffffff,	12 },
+	{ 0x1fffffff,	13 },
+	{ 0x3fffffff,	14 },
+	{ 0x7fffffff,	15 },
 	{ 0,		 0 } /* sentinel */
 };
 
@@ -96,6 +96,7 @@ struct rk30_wd_softc {
 	device_t		dev;
 	struct resource *	res;
 	struct mtx		mtx;
+	int			freq;
 };
 
 static void rk30_wd_watchdog_fn(void *private, u_int cmd, int *error);
@@ -117,12 +118,20 @@ rk30_wd_attach(device_t dev)
 {
 	struct rk30_wd_softc *sc;
 	int rid;
+	phandle_t node;
+	pcell_t cell;
 
 	if (rk30_wd_sc != NULL)
 		return (ENXIO);
 
 	sc = device_get_softc(dev);
 	sc->dev = dev;
+
+	node = ofw_bus_get_node(sc->dev);
+	if ((OF_getprop(node, "clock-frequency", &cell, sizeof(cell))) > 0)
+		sc->freq = (int)fdt32_to_cpu(cell) / 1000000;
+	else
+		return (ENXIO);
 
 	rid = 0;
 	sc->res = bus_alloc_resource_any(dev, SYS_RES_MEMORY, &rid, RF_ACTIVE);
@@ -153,10 +162,10 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 	if (cmd > 0) {
 		ms = ((uint64_t)1 << (cmd & WD_INTERVAL)) / 1000000;
 		i = 0;
-		while (wd_intervals[i].milliseconds && 
-		    (ms > wd_intervals[i].milliseconds))
+		while (wd_intervals[i].milliseconds / sc->freq && 
+		    (ms > wd_intervals[i].milliseconds / sc->freq))
 			i++;
-		if (wd_intervals[i].milliseconds) {
+		if (wd_intervals[i].milliseconds / sc->freq) {
 			RK30_WDT_WRITE(sc, WDOG_TORR, 
 			    wd_intervals[i].value << WDOG_TORR_INTVL_SHIFT);
 			RK30_WDT_WRITE(sc, WDOG_CTRL, 
