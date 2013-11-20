@@ -69,31 +69,7 @@ __FBSDID("$FreeBSD$");
 #define	WDOG_CRR_PWD		0x76
 #define	WDOG_STAT		0x10
 #define	WDOG_EOI		0x14
-
-struct rk30_wd_interval {
-	uint64_t	microseconds;
-	unsigned int	value;
-};
-
-struct rk30_wd_interval wd_intervals[] = {
-	{     0xffff,	 0 },
-	{    0x1ffff,	 1 },
-	{    0x3ffff,	 2 },
-	{    0x7ffff,	 3 },
-	{    0xfffff,	 4 },
-	{   0x1fffff,	 5 },
-	{   0x3fffff,	 6 },
-	{   0x7fffff,	 7 },
-	{   0xffffff,	 8 },
-	{  0x1ffffff,	 9 },
-	{  0x3ffffff,	10 },
-	{  0x7ffffff,	11 },
-	{  0xfffffff,	12 },
-	{ 0x1fffffff,	13 },
-	{ 0x3fffffff,	14 },
-	{ 0x7fffffff,	15 },
-	{ 0,		 0 } /* sentinel */
-};
+#define	WDOG_MIN_CNT		2730
 
 static struct rk30_wd_softc *rk30_wd_sc = NULL;
 
@@ -101,7 +77,7 @@ struct rk30_wd_softc {
 	device_t		dev;
 	struct resource *	res;
 	struct mtx		mtx;
-	int			freq;
+	int 			freq;
 };
 
 static void rk30_wd_watchdog_fn(void *private, u_int cmd, int *error);
@@ -156,7 +132,7 @@ static void
 rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 {
 	struct rk30_wd_softc *sc;
-	uint64_t ms;
+	uint64_t ms, m, max;
 	int i;
 
 	sc = private;
@@ -166,15 +142,18 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 
 	if (cmd > 0) {
 		ms = ((uint64_t)1 << (cmd & WD_INTERVAL)) / 1000000;
+		m = 0xffff / sc->freq;
+		max = 0x7fffffff / sc->freq + 1;
 		i = 0;
-		while (wd_intervals[i].microseconds / sc->freq && 
-		    (ms > wd_intervals[i].microseconds / sc->freq))
+		while (m < max && m < ms) {
+			m <<= 1;
 			i++;
-		if (wd_intervals[i].microseconds / sc->freq) {
-			RK30_WDT_WRITE(sc, WDOG_TORR, 
-			    wd_intervals[i].value << WDOG_TORR_INTVL_SHIFT);
-			RK30_WDT_WRITE(sc, WDOG_CTRL, 
-			    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | 
+		}
+		if (m < max) {
+			RK30_WDT_WRITE(sc, WDOG_TORR,
+			    i << WDOG_TORR_INTVL_SHIFT);
+			RK30_WDT_WRITE(sc, WDOG_CTRL,
+			    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE |
 			    WDOG_CTRL_RST_PULSE);
 			RK30_WDT_WRITE(sc, WDOG_CRR, WDOG_CRR_PWD);
 			*error = 0;
@@ -199,7 +178,7 @@ rk30_wd_watchdog_reset()
 
 	bus_space_map(fdtbus_bs_tag, RK30_WDT_BASE, RK30_WDT_PSIZE, 0, &bsh);
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_TORR,
-	    wd_intervals[0].value << WDOG_TORR_INTVL_SHIFT);
+	    WDOG_MIN_CNT << WDOG_TORR_INTVL_SHIFT);
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_CTRL,
 	    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | WDOG_CTRL_RST_PULSE);
 
