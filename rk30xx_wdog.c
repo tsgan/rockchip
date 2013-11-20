@@ -69,7 +69,6 @@ __FBSDID("$FreeBSD$");
 #define	WDOG_CRR_PWD		0x76
 #define	WDOG_STAT		0x10
 #define	WDOG_EOI		0x14
-#define	WDOG_MIN_CNT		2730
 
 static struct rk30_wd_softc *rk30_wd_sc = NULL;
 
@@ -176,8 +175,7 @@ rk30_wd_watchdog_reset()
 	bus_space_handle_t bsh;
 
 	bus_space_map(fdtbus_bs_tag, RK30_WDT_BASE, RK30_WDT_PSIZE, 0, &bsh);
-	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_TORR,
-	    WDOG_MIN_CNT << WDOG_TORR_INTVL_SHIFT);
+	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_TORR, 0);
 	bus_space_write_4(fdtbus_bs_tag, bsh, WDOG_CTRL,
 	    WDOG_CTRL_EN | WDOG_CTRL_RSP_MODE | WDOG_CTRL_RST_PULSE);
 
