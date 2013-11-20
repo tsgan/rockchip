@@ -157,8 +157,7 @@ rk30_wd_watchdog_fn(void *private, u_int cmd, int *error)
 			    WDOG_CTRL_RST_PULSE);
 			RK30_WDT_WRITE(sc, WDOG_CRR, WDOG_CRR_PWD);
 			*error = 0;
-		}
-		else {
+		} else {
 			device_printf(sc->dev, "Can not be disabled\n");
 			mtx_unlock(&sc->mtx);
 			RK30_WDT_WRITE(sc, WDOG_CTRL, WDOG_CTRL_RST);
