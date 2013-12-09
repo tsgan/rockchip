@@ -2,7 +2,7 @@ Index: rk30xx_gpio.c
 ===================================================================
 --- rk30xx_gpio.c	(revision 258860)
 +++ rk30xx_gpio.c	(working copy)
-@@ -86,6 +86,26 @@
+@@ -86,6 +86,23 @@
  	struct gpio_pin		sc_gpio_pins[RK30_GPIO_PINS];
  };
  
@@ -20,16 +20,13 @@ Index: rk30xx_gpio.c
 +
 +struct gpio_ctrl_entry gpio_controllers[] = {
 +	{ "rockchip,rk30xx-gpio", &rk30_gpios_prop_handle },
-+	{ "rockchip,rk30xx-gpio", &rk30_gpios_prop_handle },
-+	{ "rockchip,rk30xx-gpio", &rk30_gpios_prop_handle },
-+	{ "rockchip,rk30xx-gpio", &rk30_gpios_prop_handle },
 +	{ NULL, NULL }
 +};
 +
  #define	RK30_GPIO_LOCK(_sc)		mtx_lock(&_sc->sc_mtx)
  #define	RK30_GPIO_UNLOCK(_sc)		mtx_unlock(&_sc->sc_mtx)
  #define	RK30_GPIO_LOCK_ASSERT(_sc)	mtx_assert(&_sc->sc_mtx, MA_OWNED)
-@@ -436,6 +456,9 @@
+@@ -436,6 +453,9 @@
  	int i, rid;
  	phandle_t gpio;
  
@@ -39,20 +36,19 @@ Index: rk30xx_gpio.c
  	sc->sc_dev = dev;
  
  	mtx_init(&sc->sc_mtx, "rk30 gpio", "gpio", MTX_DEF);
-@@ -480,8 +503,11 @@
+@@ -480,6 +500,11 @@
  
  	device_add_child(dev, "gpioc", device_get_unit(dev));
  	device_add_child(dev, "gpiobus", device_get_unit(dev));
--	return (bus_generic_attach(dev));
- 
++
 +	rk30_gpio_sc = sc;
 +
-+	return (platform_gpio_init());
-+
++	platform_gpio_init();
++	
+ 	return (bus_generic_attach(dev));
+ 
  fail:
- 	if (sc->sc_irq_res)
- 		bus_release_resource(dev, SYS_RES_IRQ, 0, sc->sc_irq_res);
-@@ -525,3 +551,121 @@
+@@ -525,3 +550,121 @@
  };
  
  DRIVER_MODULE(rk30_gpio, simplebus, rk30_gpio_driver, rk30_gpio_devclass, 0, 0);
