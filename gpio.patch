@@ -102,10 +102,10 @@ Index: rk30xx_gpio.c
 +
 +		rk30_gpio_pin_configure(sc, &sc->sc_gpio_pins[i], flags);
 +
-+		if (dir == 1)
++		if (dir == 1) {
 +			/* Input. */
 +			rk30_gpio_pin_set(sc->sc_dev, pin, RK30_GPIO_INPUT);
-+		else {
++		} else {
 +			/* Output. */
 +			rk30_gpio_pin_set(sc->sc_dev, pin, RK30_GPIO_OUTPUT);
 +		}
