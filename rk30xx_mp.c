@@ -142,7 +142,7 @@ platform_mp_start_ap(void)
 
 	/* Enable the SCU power domain */
 	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
-	val &= (1 << 4);
+	val &= ~(1 << 4);
 	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
 	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
