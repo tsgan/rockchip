@@ -145,9 +145,9 @@ platform_mp_start_ap(void)
 	val &= ~(1 << 4);
 	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
-	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
-	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG, 
-	    val | SCU_STANDBY_EN);
+//	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
+//	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG, 
+//	    val | SCU_STANDBY_EN);
 
 	/* Enable the SCU */
 	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
