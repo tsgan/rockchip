@@ -157,7 +157,7 @@ platform_mp_start_ap(void)
 	/* Start all cores */
 	for (i = 1; i < mp_ncpus; i++) {
 		val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
-		val &= (1 << i);
+		val &= ~(1 << i);
 		bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 	}
 
