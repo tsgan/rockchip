@@ -110,7 +110,7 @@ platform_mp_probe(void)
 	return (mp_ncpus > 1);
 }
 
-void    
+void
 platform_mp_start_ap(void)
 {
 	bus_space_handle_t scu;
@@ -126,6 +126,13 @@ platform_mp_start_ap(void)
 		panic("Couldn't map the IMEM\n");
 	if (bus_space_map(fdtbus_bs_tag, PMU_PHYSBASE, PMU_SIZE, 0, &pmu) != 0)
 		panic("Couldn't map the PMU\n");
+
+	/*
+	 * Invalidate SCU cache tags.  The 0x0000ffff constant invalidates all
+	 * ways on all cores 0-3.  Per the ARM docs, it's harmless to write to
+	 * the bits for cores that are not present.
+	 */
+	bus_space_write_4(fdtbus_bs_tag, scu, SCU_INV_TAGS_REG, 0x0000ffff);
 
 	/* First make sure that all cores except the first are really off */
 	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
@@ -151,7 +158,7 @@ platform_mp_start_ap(void)
 
 	/* Enable the SCU */
 	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
-	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG, 
+	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG,
 	    val | SCU_CONTROL_ENABLE);
 
 	/* Start all cores */
