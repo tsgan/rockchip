@@ -54,13 +54,27 @@ __FBSDID("$FreeBSD$");
 #define	SCU_NONSECURE_ACCESS_REG	0x1c
 
 #define	IMEM_PHYSBASE			0x10080000
-//#define	IMEM_SIZE			0x10
-//#define	IMEM_SIZE			0x8000
-#define	IMEM_SIZE			0x50
+#define	IMEM_SIZE			0x20
 
 #define	PMU_PHYSBASE			0x20004000
 #define	PMU_SIZE			0x100
 #define	PMU_PWRDN_CON			0x08
+
+static void rk30xx_secondary_trampoline(void);
+
+extern char *rk30xx_boot_fn;
+
+static void
+rk30xx_secondary_trampoline(void)
+{
+
+	__asm __volatile(
+		"ldr pc, 1f\n"
+		".globl rk30xx_boot_fn\n"
+		"rk30xx_boot_fn:\n"
+		"1: .space 4\n"
+	);
+}
 
 void
 platform_mp_init_secondary(void)
@@ -72,38 +86,28 @@ platform_mp_init_secondary(void)
 void
 platform_mp_setmaxid(void)
 {
-//	bus_space_handle_t scu;
-//	int hwcpu, ncpu;
-//	uint32_t val;
+	bus_space_handle_t scu;
+	int ncpu;
+	uint32_t val;
 
-	/* If we've already set the global vars don't bother to do it again. */
 	if (mp_ncpus != 0)
 		return;
-/*
+
 	if (bus_space_map(fdtbus_bs_tag, SCU_PHYSBASE, SCU_SIZE, 0, &scu) != 0)
 		panic("Couldn't map the SCU\n");
 
 	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONFIG_REG);
-	hwcpu = (val & SCU_CONFIG_REG_NCPU_MASK) + 1;
+	ncpu = (val & SCU_CONFIG_REG_NCPU_MASK) + 1;
 	bus_space_unmap(fdtbus_bs_tag, scu, SCU_SIZE);
-
-	ncpu = hwcpu;
-	TUNABLE_INT_FETCH("hw.ncpu", &ncpu);
-	if (ncpu < 1 || ncpu > hwcpu)
-		ncpu = hwcpu;
 
 	mp_ncpus = ncpu;
 	mp_maxid = ncpu - 1;
-*/
-	mp_ncpus = 4;
-	mp_maxid = 3;
 }
 
 int
 platform_mp_probe(void)
 {
 
-	/* I think platform_mp_setmaxid must get called first, but be safe. */
 	if (mp_ncpus == 0)
 		platform_mp_setmaxid();
 
@@ -116,13 +120,13 @@ platform_mp_start_ap(void)
 	bus_space_handle_t scu;
 	bus_space_handle_t imem;
 	bus_space_handle_t pmu;
-
 	uint32_t val;
 	int i;
 
 	if (bus_space_map(fdtbus_bs_tag, SCU_PHYSBASE, SCU_SIZE, 0, &scu) != 0)
 		panic("Couldn't map the SCU\n");
-	if (bus_space_map(fdtbus_bs_tag, IMEM_PHYSBASE, IMEM_SIZE, 0, &imem) != 0)
+	if (bus_space_map(fdtbus_bs_tag, IMEM_PHYSBASE,
+	    IMEM_SIZE, 0, &imem) != 0)
 		panic("Couldn't map the IMEM\n");
 	if (bus_space_map(fdtbus_bs_tag, PMU_PHYSBASE, PMU_SIZE, 0, &pmu) != 0)
 		panic("Couldn't map the PMU\n");
@@ -134,32 +138,38 @@ platform_mp_start_ap(void)
 	 */
 	bus_space_write_4(fdtbus_bs_tag, scu, SCU_INV_TAGS_REG, 0x0000ffff);
 
-	/* First make sure that all cores except the first are really off */
+	/* Make sure all cores except the first are off */
 	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
 	for (i = 1; i < mp_ncpus; i++)
 		val |= 1 << i;
 	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
-	/* Write start address */
-	bus_space_write_4(fdtbus_bs_tag, imem, 0,
-	    pmap_kextract((vm_offset_t)mpentry));
-
-	cpu_idcache_wbinv_all();
-	cpu_l2cache_wbinv_all();
-
-	/* Enable the SCU power domain */
+	/* Enable SCU power domain */
 	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
 	val &= ~(1 << 4);
 	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
-//	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
-//	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG, 
-//	    val | SCU_STANDBY_EN);
-
-	/* Enable the SCU */
+	/* Enable SCU */
 	val = bus_space_read_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG);
 	bus_space_write_4(fdtbus_bs_tag, scu, SCU_CONTROL_REG,
 	    val | SCU_CONTROL_ENABLE);
+
+	/*
+	 * Cores will execute the code which resides at the start of
+	 * the on-chip bootram/sram after power-on. This sram region
+	 * should be reserved and the trampoline code that directs
+	 * the core to the real startup code in ram should be copied
+	 * into this sram region.
+	 */
+
+	/* Set boot function for the sram code */
+	rk30xx_boot_fn = (char *)pmap_kextract((vm_offset_t)mpentry);
+
+	/* Copy trampoline to sram, that runs during startup of the core */
+	memcpy((void *)imem, &rk30xx_secondary_trampoline, 8);
+
+	cpu_idcache_wbinv_all();
+	cpu_l2cache_wbinv_all();
 
 	/* Start all cores */
 	for (i = 1; i < mp_ncpus; i++) {
