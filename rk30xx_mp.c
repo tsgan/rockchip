@@ -165,7 +165,8 @@ platform_mp_start_ap(void)
 	mpentry_addr = (char *)pmap_kextract((vm_offset_t)mpentry);
 
 	/* Copy trampoline to sram, that runs during startup of the core */
-	memcpy((void *)imem, &rk30xx_boot2, 8);
+	bus_space_write_region_4(fdtbus_bs_tag, imem, 0,
+	    (uint32_t *)&rk30xx_boot2, 8);
 
 	cpu_idcache_wbinv_all();
 	cpu_l2cache_wbinv_all();
