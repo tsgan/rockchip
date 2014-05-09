@@ -61,7 +61,7 @@ __FBSDID("$FreeBSD$");
 #define	PMU_PWRDN_CON			0x08
 #define	PMU_PWRDN_SCU			(1 << 4)
 
-extern char 	*jmp_to_mpentry;
+extern char 	*mpentry_addr;
 static void 	 rk30xx_boot2(void);
 
 static void
@@ -70,8 +70,8 @@ rk30xx_boot2(void)
 
 	__asm __volatile(
 			   "ldr pc, 1f\n"
-			   ".globl jmp_to_mpentry\n"
-			   "jmp_to_mpentry:\n"
+			   ".globl mpentry_addr\n"
+			   "mpentry_addr:\n"
 			"1: .space 4\n");
 }
 
@@ -162,7 +162,7 @@ platform_mp_start_ap(void)
 	 *
 	 * First set boot function for the sram code.
 	 */
-	jmp_to_mpentry = (char *)pmap_kextract((vm_offset_t)mpentry);
+	mpentry_addr = (char *)pmap_kextract((vm_offset_t)mpentry);
 
 	/* Copy trampoline to sram, that runs during startup of the core */
 	memcpy((void *)imem, &rk30xx_boot2, 8);
