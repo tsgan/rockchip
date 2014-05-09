@@ -59,21 +59,20 @@ __FBSDID("$FreeBSD$");
 #define	PMU_PHYSBASE			0x20004000
 #define	PMU_SIZE			0x100
 #define	PMU_PWRDN_CON			0x08
+#define	PMU_PWRDN_SCU			(1 << 4)
 
-static void rk30xx_secondary_trampoline(void);
-
-extern char *rk30xx_boot_fn;
+extern char 	*jmp_to_mpentry;
+static void 	 rk30xx_boot2(void);
 
 static void
-rk30xx_secondary_trampoline(void)
+rk30xx_boot2(void)
 {
 
 	__asm __volatile(
-		"ldr pc, 1f\n"
-		".globl rk30xx_boot_fn\n"
-		"rk30xx_boot_fn:\n"
-		"1: .space 4\n"
-	);
+			   "ldr pc, 1f\n"
+			   ".globl jmp_to_mpentry\n"
+			   "jmp_to_mpentry:\n"
+			"1: .space 4\n");
 }
 
 void
@@ -146,7 +145,7 @@ platform_mp_start_ap(void)
 
 	/* Enable SCU power domain */
 	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
-	val &= ~(1 << 4);
+	val &= ~PMU_PWRDN_SCU;
 	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
 	/* Enable SCU */
@@ -160,23 +159,22 @@ platform_mp_start_ap(void)
 	 * should be reserved and the trampoline code that directs
 	 * the core to the real startup code in ram should be copied
 	 * into this sram region.
+	 *
+	 * First set boot function for the sram code.
 	 */
-
-	/* Set boot function for the sram code */
-	rk30xx_boot_fn = (char *)pmap_kextract((vm_offset_t)mpentry);
+	jmp_to_mpentry = (char *)pmap_kextract((vm_offset_t)mpentry);
 
 	/* Copy trampoline to sram, that runs during startup of the core */
-	memcpy((void *)imem, &rk30xx_secondary_trampoline, 8);
+	memcpy((void *)imem, &rk30xx_boot2, 8);
 
 	cpu_idcache_wbinv_all();
 	cpu_l2cache_wbinv_all();
 
 	/* Start all cores */
-	for (i = 1; i < mp_ncpus; i++) {
-		val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
+	val = bus_space_read_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON);
+	for (i = 1; i < mp_ncpus; i++)
 		val &= ~(1 << i);
-		bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
-	}
+	bus_space_write_4(fdtbus_bs_tag, pmu, PMU_PWRDN_CON, val);
 
 	armv7_sev();
 
