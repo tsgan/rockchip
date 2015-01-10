@@ -1069,7 +1069,7 @@ initarm(struct arm_boot_params *abp)
 	rk3288_uart_base = (uint32_t *) 0xff690000;
 
         printf("in initarm 1\n");
-//	cninit();
+	cninit();
         printf("in initarm 1.1\n");
 
 	lastaddr = parse_boot_param(abp);
