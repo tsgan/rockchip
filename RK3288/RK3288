@@ -138,7 +138,7 @@ device		udav
 # Flattened Device Tree
 options 	FDT			# Configure using FDT/DTB data
 
-option SOCDEV_PA=0xff600000
-option SOCDEV_VA=0xff600000
-option EARLY_PRINTF
+#option SOCDEV_PA=0xff600000
+#option SOCDEV_VA=0xff600000
+#option EARLY_PRINTF
 

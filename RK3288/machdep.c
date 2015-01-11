@@ -1063,14 +1063,14 @@ initarm(struct arm_boot_params *abp)
 	u_int l1pagetable;
 	int i, j, err_devmap, mem_regions_sz;
 
-	volatile uint32_t *uart = (uint32_t *) 0xff690000;
-	volatile uint32_t *uartv = (uint32_t *) 0xffe90000;
+//	volatile uint32_t *uart = (uint32_t *) 0xff690000;
+//	volatile uint32_t *uartv = (uint32_t *) 0xffe90000;
 
 	rk3288_uart_base = (uint32_t *) 0xff690000;
 
-        printf("in initarm 1\n");
-	cninit();
-        printf("in initarm 1.1\n");
+//        printf("in initarm 1\n");
+//	cninit();
+//        printf("in initarm 1.1\n");
 
 	lastaddr = parse_boot_param(abp);
 	arm_physmem_kernaddr = abp->abp_physaddr;
@@ -1242,7 +1242,7 @@ initarm(struct arm_boot_params *abp)
 	cpu_domains((DOMAIN_CLIENT << (PMAP_DOMAIN_KERNEL * 2)) | DOMAIN_CLIENT);
 	pmap_pa = kernel_l1pt.pv_pa;
 
-	*uart = 'C';
+//	*uart = 'C';
 
         printf("in initarm 2, %p\n", arm_devmap_ptov(0xff690000,4));
         printf("in initarm 3, %p\n", pmap_mapdev(0xff690000,4));
@@ -1251,9 +1251,9 @@ initarm(struct arm_boot_params *abp)
 
 	rk3288_uart_base = arm_devmap_ptov(0xff690000,4);
 
-        printf("in initarm 4\n");
+//        printf("in initarm 4\n");
 
-	*uartv = 'D';
+//	*uartv = 'D';
 
 	cpu_tlb_flushID();
 	cpu_domains(DOMAIN_CLIENT << (PMAP_DOMAIN_KERNEL * 2));
@@ -1272,15 +1272,15 @@ initarm(struct arm_boot_params *abp)
 
 	platform_gpio_init();
 
-	*uartv = 'E';
+//	*uartv = 'E';
 
-        printf("in initarm 5\n");
+//        printf("in initarm 5\n");
 
 	cninit();
 
         printf("in initarm 6\n");
 
-	*uartv = 'F';
+//	*uartv = 'F';
 
 	debugf("initarm: console initialized\n");
 	debugf(" arg1 kmdp = 0x%08x\n", (uint32_t)kmdp);

@@ -78,7 +78,7 @@ __FBSDID("$FreeBSD: head/sys/arm/arm/locore-v6.S 276596 2015-01-02 23:46:26Z ian
 	.globl	btext
 btext:
 ASENTRY_NP(_start)
-	DEBUG_LOC0
+	//DEBUG_LOC0
 
 	STOP_UNWINDING		/* Can't unwind	into the bootloader! */
 
@@ -171,7 +171,7 @@ ASENTRY_NP(_start)
 	subs	r2, r2,	#4
 	bgt	2b
 
-	DEBUG_LOC2
+	//DEBUG_LOC2
 
 	mov	r1, #28			/* loader info size is 28 bytes	also second arg	*/
 	subs	sp, sp,	r1		/* allocate arm_boot_params struct on stack */
@@ -264,7 +264,7 @@ ASENTRY_NP(init_mmu)
 	DSB
 	ISB
 
-	DEBUG_LOC1
+	//DEBUG_LOC1
 
 	/* Enable MMU */
 	mrc	CP15_SCTLR(r0)

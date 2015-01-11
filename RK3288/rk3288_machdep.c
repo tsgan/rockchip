@@ -120,7 +120,7 @@ cpu_reset()
  * makes sense now, but if multiple SOCs do that it will make early_putc another
  * duplicate symbol to be eliminated on the path to a generic kernel.
  */
-//#if 0
+#if 0
 static void
 rockchip_early_putc(int c)
 {
@@ -133,4 +133,4 @@ rockchip_early_putc(int c)
         *UART_TX_REG = c;
 }
 early_putc_t *early_putc = rockchip_early_putc;
-//#endif
+#endif

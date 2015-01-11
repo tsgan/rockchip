@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD: head/sys/arm/allwinner/console.c 263711 2014-03-25 08:31:47Z
 #include <sys/kernel.h>
 
 #ifndef	RK3288_UART_BASE
-#define	RK3288_UART_BASE	0xffe90000 	/* UART0 */
+#define	RK3288_UART_BASE	0xff690000 	/* UART0 */
 #endif
 
 #define	REG_SHIFT	2
