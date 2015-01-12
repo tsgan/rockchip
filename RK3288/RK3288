@@ -83,8 +83,8 @@ options 	ROOTDEVNAME=\"ufs:/dev/da0\"
 #device		mmcsd			# mmc/sd flash cards
 
 # Console and misc
-#device		uart
-#device		uart_ns8250
+device		uart
+device		uart_ns8250
 device		pty
 device		snp
 device		md

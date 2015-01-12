@@ -52,26 +52,26 @@
 			#interrupt-cells = <1>;
 		};
 
-                pmu@ff730000 {
-                        compatible = "rockchip,rk30xx-pmu";
-                        #address-cells = <1>;
-                        #size-cells = <1>;
-                        reg = <0xff730000 0x100>;
-                };
+		pmu@ff730000 {
+			compatible = "rockchip,rk30xx-pmu";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0xff730000 0x100>;
+		};
 
-                grf@ff770000 {
-                        compatible = "rockchip,rk30xx-grf";
-                        #address-cells = <1>;
-                        #size-cells = <1>;
-                        reg = < 0xff770000 0x2000 >;
-                };
+		grf@ff770000 {
+			compatible = "rockchip,rk30xx-grf";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = < 0xff770000 0x2000 >;
+		};
 
-                generic_timer {
-                        compatible = "arm,armv7-timer";
-                        clock-frequency = <24000000>;
-                        interrupts = < 29 30 27 26 >;
-                        interrupt-parent = <&GIC>;
-                };
+		generic_timer {
+			compatible = "arm,armv7-timer";
+			clock-frequency = <24000000>;
+			interrupts = < 29 30 27 26 >;
+			interrupt-parent = <&GIC>;
+		};
 
 		timer@ff810000 {
 			compatible = "rockchip,timer";
@@ -260,29 +260,16 @@
 		uart2: serial@ff690000 {
 			compatible = "ns16550";
 			reg = <0xff690000 0x400>;
-                        reg-shift = <2>;
+			reg-shift = <2>;
 			interrupts = <89>;
 			interrupt-parent = <&GIC>;
 			current-speed = <115200>;
 			clock-frequency = < 24000000 >;
 			busy-detect = <1>;
 			broken-txfifo = <1>;
-                        status = "disabled";
+			status = "disabled";
 		};
-/*
-                uart2: serial@20064000 {
-                        compatible = "ns16550";
-                        reg = <0x20064000 0x400>;
-                        reg-shift = <2>;
-                        interrupts = <68>;   
-                        interrupt-parent = <&GIC>;
-                        current-speed = <115200>;
-                        clock-frequency = < 24000000 >;
-                        busy-detect = <1>;
-                        broken-txfifo = <1>;
-                        status = "disabled";
-                };
-*/
+
 		uart3: serial@ff1b0000 {
 			compatible = "ns16550";
 			reg = <0xff1b0000 0x400>;

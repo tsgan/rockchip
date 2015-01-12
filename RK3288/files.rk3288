@@ -14,9 +14,9 @@ arm/arm/generic_timer.c			standard
 arm/arm/bus_space-v6.c			standard
 arm/rockchip/rk30xx_common.c		standard
 arm/rockchip/rk3288_machdep.c		standard
-arm/rockchip/rk3288_pmu.c		standard
-arm/rockchip/rk3288_grf.c		standard
-arm/rockchip/console.c			standard
+arm/rockchip/rk30xx_pmu.c		standard
+arm/rockchip/rk30xx_grf.c		standard
+#arm/rockchip/console.c			standard
 #arm/rockchip/rk30xx_wdog.c		standard
 arm/rockchip/rk30xx_gpio.c		optional	gpio
-#arm/rockchip/rk30xx_mp.c		optional	smp
+#arm/rockchip/rk3288_mp.c		optional	smp

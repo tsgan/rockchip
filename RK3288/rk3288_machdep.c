@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2013 Ganbold Tsagaankhuu <ganbold@freebsd.org>
+ * Copyright (c) 2015 Ganbold Tsagaankhuu <ganbold@freebsd.org>
  * All rights reserved.
  *
  * This code is derived from software written for Brini by Mark Brinicombe
@@ -107,7 +107,7 @@ void
 cpu_reset()
 {
 
-	printf("Reset failed!\n");
+	printf("Reset not implemented!\n");
 	while (1);
 }
 
@@ -124,13 +124,13 @@ cpu_reset()
 static void
 rockchip_early_putc(int c)
 {
-        volatile uint32_t *UART_USR = (uint32_t *)0xff69007c;
-        volatile uint32_t *UART_TX_REG   = (uint32_t *)0xff690000;
-        const uint32_t     UART_TRANSMIT_FIFO_NOT_FULL    = (1 << 1);
+	volatile uint32_t *UART_USR = (uint32_t *)0xff69007c;
+	volatile uint32_t *UART_TX_REG   = (uint32_t *)0xff690000;
+	const uint32_t     UART_TRANSMIT_FIFO_NOT_FULL    = (1 << 1);
 
 	while((*UART_USR & UART_TRANSMIT_FIFO_NOT_FULL) == 0)
-                continue;
-        *UART_TX_REG = c;
+		continue;
+	*UART_TX_REG = c;
 }
 early_putc_t *early_putc = rockchip_early_putc;
 #endif
